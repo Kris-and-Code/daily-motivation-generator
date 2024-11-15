@@ -1,7 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials, db
 from datetime import datetime
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Optional
 import os
 from dotenv import load_dotenv
 
@@ -16,29 +16,47 @@ class FirebaseStorage:
             })
         self.db_ref = db.reference('quotes')
 
-    def save_quote(self, mood: str, quote: str, context: str = None, ai_generated: bool = True) -> str:
+    def save_quote(self, mood: str, quote: str, context: Optional[str] = None) -> str:
         """Save a quote to Firebase."""
         quote_data = {
-            'timestamp': datetime.now().isoformat(),
-            'mood': mood,
             'quote': quote,
+            'mood': mood,
             'context': context,
-            'ai_generated': ai_generated
+            'timestamp': datetime.now().isoformat()
         }
         
-        # Push the quote data and get the generated key
-        new_quote_ref = self.db_ref.push(quote_data)
-        return new_quote_ref.key
+        try:
+            new_quote_ref = self.db_ref.push(quote_data)
+            return new_quote_ref.key
+        except Exception as e:
+            print(f"Error saving quote: {e}")
+            raise
 
     def get_recent_quotes(self, limit: int = 5) -> List[Dict]:
         """Retrieve recent quotes from Firebase."""
         quotes = self.db_ref.order_by_child('timestamp').limit_to_last(limit).get()
         return self._format_quotes(quotes) if quotes else []
 
-    def get_quotes_by_mood(self, mood: str) -> List[Dict]:
+    def get_quotes_by_mood(self, mood: Optional[str] = None) -> List[Dict]:
         """Retrieve quotes filtered by mood."""
-        quotes = self.db_ref.order_by_child('mood').equal_to(mood).get()
-        return self._format_quotes(quotes) if quotes else []
+        try:
+            quotes_ref = self.db_ref.get()
+            if not quotes_ref:
+                return []
+            
+            quotes = []
+            for key, value in quotes_ref.items():
+                if mood is None or value.get('mood') == mood:
+                    quotes.append({
+                        'id': key,
+                        **value
+                    })
+            
+            # Sort by timestamp, most recent first
+            return sorted(quotes, key=lambda x: x.get('timestamp', ''), reverse=True)
+        except Exception as e:
+            print(f"Error retrieving quotes: {e}")
+            return []
 
     def _format_quotes(self, quotes: Dict) -> List[Dict]:
         """Format quotes for consistent output."""

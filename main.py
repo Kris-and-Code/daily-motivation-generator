@@ -3,6 +3,10 @@ import schedule
 import time
 import argparse
 import firebase_admin
+import string
+import difflib
+from typing import Optional, Dict, List
+from datetime import datetime
 
 def main():
     parser = argparse.ArgumentParser(description='Daily Motivation Generator')
