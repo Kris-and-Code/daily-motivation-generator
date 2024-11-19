@@ -1,13 +1,19 @@
-# Ignore Python virtual environments
-venv/
+# Credentials and Environment files
+*.env
+*firebase-adminsdk*.json
+.env
+credentials.json
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
 
 # Ignore compiled Python files
 __pycache__/
 *.pyc
-
-# Ignore environment and configuration files
-.env
-*.env
 
 # Ignore logs and temp files
 *.log
@@ -17,9 +23,19 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+# Ignore Python virtual environments
+venv/
 
-# Firebase credentials
-*.json
-!package.json
-!package-lock.json
-daily-motivation-generator-firebase-adminsdk-*.json
+# API Keys and Secrets
+**/credentials/*
+**/secrets/*
+*.secret
+api_key*
+*_key*
+*_token*
+*_secret*
+google_credentials.json
+google-credentials.json
+openai.key
+
+daily-motivation-generator-firebase-adminsdk-txkxn-405d37c7aa.json
