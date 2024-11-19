@@ -16,3 +16,10 @@ __pycache__/
 # Ignore OS-specific files
 .DS_Store
 Thumbs.db
+
+
+# Firebase credentials
+*.json
+!package.json
+!package-lock.json
+daily-motivation-generator-firebase-adminsdk-*.json
