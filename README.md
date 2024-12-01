@@ -74,3 +74,4 @@ Tell me about your day: Have a big presentation tomorrow
 Your personalized motivational quote:
 Take a deep breath. This moment shall pass, and you are stronger than you think.
 Would you like to schedule daily motivational quotes? (yes/no): yes
+

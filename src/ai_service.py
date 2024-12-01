@@ -16,11 +16,18 @@ class AIService:
             response = self.client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are a motivational coach who provides personalized, concise, and uplifting quotes. Keep responses under 100 characters."},
+                    {
+                        "role": "system", 
+                        "content": """You are a motivational coach who provides personalized, 
+                                    concise, and uplifting quotes. Keep responses under 100 
+                                    characters and focus on actionable wisdom."""
+                    },
                     {"role": "user", "content": prompt}
                 ],
                 max_tokens=100,
-                temperature=0.7
+                temperature=0.7,
+                presence_penalty=0.6,  # Encourage more diverse responses
+                frequency_penalty=0.3  # Reduce repetitive phrases
             )
             return response.choices[0].message.content.strip()
         
@@ -38,8 +45,12 @@ class AIService:
         """Provide a fallback quote if AI generation fails."""
         fallback_quotes = {
             "happy": "Your joy is contagious. Keep spreading happiness!",
+            "sad": "Every storm runs out of rain. Better days are coming.",
             "anxious": "This too shall pass. Take one breath at a time.",
             "excited": "Channel your excitement into amazing achievements!",
-            # Add more fallback quotes...
+            "tired": "Rest if you must, but don't quit. Tomorrow brings new energy.",
+            "stressed": "You've overcome every challenge so far. This one too shall pass.",
+            "motivated": "You're on the right path. Keep pushing forward!",
+            "confused": "Clarity comes one step at a time. Trust the journey."
         }
-        return fallback_quotes.get(mood, "Every moment is a fresh beginning.") 
+        return fallback_quotes.get(mood.lower(), "Every moment is a fresh beginning.") 
